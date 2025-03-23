@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reloj Digital Estilizado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            background: url('fotos/reflection-lights-mountain-lake-captured-parco-ciani-lugano-switzerland.jpg') no-repeat center center/cover;
+        }
+
+        /* Efecto de desenfoque en el fondo */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Oscurecer un poco el fondo */
+            backdrop-filter: blur(5px);
+            z-index: -1;
+        }
+
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .clock {
+            font-size: 9rem;
+            font-weight: bold;
+            display: flex;
+            gap: 15px;
+        }
+
+        .clock span {
+            display: inline-block;
+            background: #ffcc00;
+            color: #222;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .date {
+            font-size: 2rem;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Efecto de transición suave */
+        .clock span, .date {
+            transition: all 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-container">
+        <div class="clock">
+            <span id="hours">00</span> :
+            <span id="minutes">00</span> :
+            <span id="seconds">00</span>
+        </div>
+        <div class="date">Cargando fecha...</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours().toString().padStart(2, '0');
+            let minutes = now.getMinutes().toString().padStart(2, '0');
+            let seconds = now.getSeconds().toString().padStart(2, '0');
+
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+
+            // Formatear la fecha en un estilo más atractivo
+            const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('es-ES', options);
+            document.querySelector('.date').textContent = formattedDate;
+        }
+
+        // Actualizar cada segundo
+        setInterval(updateClock, 1000);
+        updateClock(); // Llamar una vez para evitar el primer retraso
+    </script>
+
+</body>
+</html>

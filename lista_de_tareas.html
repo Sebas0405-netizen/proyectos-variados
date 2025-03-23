@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas - Tablero Kanban</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('fotos/flat-lay-workstation-with-copy-space-laptop.jpg'); /* Reemplaza con la ruta de tu imagen de fondo */
+            background-size: cover;
+            background-position: center;
+            color: #c9c6c6;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 28px;
+            flex-wrap: wrap;
+        }
+        .column {
+            background-color: rgba(17, 16, 16, 0.8);
+            border-radius: 14px;
+            margin: 16px;
+            padding: 26px;
+            width: 350px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .column h2 {
+            margin-bottom: 20px;
+            font-size: 30px;
+            color: #f4f0f5;
+        }
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+        .task-item {
+            background-color: #575354;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-item.completed {
+            text-decoration: line-through;
+            background-color: #1ebd09;
+        }
+        .task-item button {
+            background-color: #fbff08;
+            color: rgb(25, 27, 27);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .task-item button:hover {
+            background-color: #d3d00c;
+        }
+        .task-form input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #d1d1d1;
+        }
+        .task-form button {
+            padding: 10px 20px;
+            background-color: #38383a;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Columna de "Por Hacer" -->
+        <div class="column" id="todo">
+            <h2>Por Hacer</h2>
+            <div class="task-form">
+                <input type="text" id="taskInput" placeholder="Agregar tarea...">
+                <button onclick="addTask()">Agregar</button>
+            </div>
+            <ul id="todoList" class="task-list"></ul>
+        </div>
+
+        <!-- Columna de "En Progreso" -->
+        <div class="column" id="inProgress">
+            <h2>En Progreso</h2>
+            <ul id="inProgressList" class="task-list"></ul>
+        </div>
+
+        <!-- Columna de "Completadas" -->
+        <div class="column" id="completed">
+            <h2>Completadas</h2>
+            <ul id="completedList" class="task-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const taskText = taskInput.value.trim();
+            if (taskText === "") {
+                alert("Por favor, ingresa una tarea.");
+                return;
+            }
+
+            const taskList = document.getElementById('todoList');
+            const li = document.createElement('li');
+            li.classList.add('task-item');
+            li.textContent = taskText;
+
+            const moveBtn = document.createElement('button');
+            moveBtn.textContent = "Mover a Progreso";
+            moveBtn.onclick = () => moveTaskToInProgress(li);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = "Eliminar";
+            deleteBtn.onclick = () => deleteTask(li);
+
+            li.appendChild(moveBtn);
+            li.appendChild(deleteBtn);
+            taskList.appendChild(li);
+
+            taskInput.value = ""; // Limpiar el campo de texto
+        }
+
+        function moveTaskToInProgress(taskItem) {
+            const inProgressList = document.getElementById('inProgressList');
+            const moveBtn = taskItem.querySelector('button');
+            moveBtn.textContent = "Mover a Completada";
+            moveBtn.onclick = () => moveTaskToCompleted(taskItem);
+
+            const deleteBtn = taskItem.querySelectorAll('button')[1];
+            deleteBtn.onclick = () => deleteTask(taskItem);
+
+            inProgressList.appendChild(taskItem);
+        }
+
+        function moveTaskToCompleted(taskItem) {
+            const completedList = document.getElementById('completedList');
+            const moveBtn = taskItem.querySelector('button');
+            moveBtn.style.display = "none"; // Ocultar el botón de mover
+
+            const deleteBtn = taskItem.querySelectorAll('button')[1];
+            deleteBtn.onclick = () => deleteTask(taskItem);
+
+            taskItem.classList.add('completed');
+            completedList.appendChild(taskItem);
+        }
+
+        function deleteTask(taskItem) {
+            taskItem.parentElement.removeChild(taskItem);
+        }
+    </script>
+
+</body>
+</html>
